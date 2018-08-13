@@ -1,10 +1,7 @@
 import triangle as tri
 import matplotlib.pyplot as plt
-import math
 import copy
-import WriteData as WD
 import Transform as Tf
-import Boundary as Bd
 import GetZ as GZ
 import GetThick as GT
 import Refine as Rf

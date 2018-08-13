@@ -1,6 +1,5 @@
 import math
 import numpy as np
-import sympy
 
 #move single point by vector
 def move_s(point, vector):
@@ -141,19 +140,6 @@ def bystep(Points, steps):
         elif step[0] == 'rz':
             rotate_z(Points, step[1])
 
-def func_step(func, steps):
-    u, v, w = sympy.symbols('u v v')
-    for step in steps:
-        if step[0] == 'm':
-            func = func.subs(x, x-step[1][0])
-            func = func.subs(y, y-step[1][1])
-            func = func.subs(z, z-step[1][2])
-        if step[0] == 'rx':
-            func = func.subs(y, y * math.cos(theta) - z * math.sin(theta))
-            func = func.subs(z, y * math.sin(theta) + z * math.cos(theta))
-            Points[i][1] = y
-            Points[i][2] = z
-
 def tri_step(t, step):
     Points = [[t['vertices'][i][0], t['vertices'][i][1], t['z'][i]] for i in range(len(t['vertices']))]
     bystep(Points, step)
@@ -164,7 +150,6 @@ def tri_step(t, step):
 
 if __name__ == '__main__':
     import ReadData as RD
-    import WriteData as WD
     import time
     start = time.time()
     Points = RD.vertices('data/input/sh_0411.obj')

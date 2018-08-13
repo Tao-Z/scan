@@ -7,7 +7,6 @@ import Locate as Lc
 import GetZ as GZ
 import GetThick as GT
 from openpyxl import Workbook
-import numpy as np
 
 start = time.time()
 Point = RD.vertices('data/input/sh_0411.obj')

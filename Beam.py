@@ -1,7 +1,6 @@
 import ReadData as RD
 import Locate as Lc
 import Boundary as Bd
-import Mesh
 import Plate
 import WriteData as WD
 

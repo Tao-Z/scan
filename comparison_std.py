@@ -1,5 +1,4 @@
 import time
-import math
 import ReadData as RD
 import Locate as Lc
 import GetZ as GZ
