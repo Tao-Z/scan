@@ -63,6 +63,7 @@ def mesh(plate):
         #ax = plt.subplot(2, 3, i, aspect='equal')
         #Tplt.plot(ax, **t)
     '''
+    '''
     #refine3
     for i in range(1,10):
         time1 = time.time()
@@ -78,7 +79,7 @@ def mesh(plate):
         print('refine3:', i, 'points:', num_point, 'elements:', num_element, 'time:', time2 - time1)
         #ax = plt.subplot(2,3,i, aspect='equal')
         #Tplt.plot(ax, **t)
-
+    '''
     #rotate to original position
     r_step = Tf.reverse(plate.step)
     Tf.tri_step(t, r_step)

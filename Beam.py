@@ -61,7 +61,7 @@ if __name__ == '__main__':
     beam1.mesh()
     #beam1.toAutoCAD('data/output/shell_model.txt')
     #beam1.toAutoCAD_thick('data/output/shell_model_thick.txt')
-    beam1.toAbaqus('data/output/Abaqus.txt', 'Job-1', 'Model-1')
+    beam1.toAbaqus('data/output/Abaqus.inp', 'Job-1', 'Model-1')
     #beam1.boundary_to_AutoCAD('data/output/segment.txt')
     end = time.time()
     print('time =', end - begin)
