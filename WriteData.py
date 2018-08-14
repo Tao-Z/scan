@@ -60,6 +60,7 @@ def toAbaqus(plates, filename, job_name, model_name):
         print('** PARTS', file = f0)
         print('**', file = f0)
         print('*Part, name=Part-1', file = f0)
+
         print('*Node', file = f0)
         Node_begin = [0]
         for plate in plates.values():
@@ -70,18 +71,17 @@ def toAbaqus(plates, filename, job_name, model_name):
             Node_begin.append(Node_begin[-1] + len(v))
 
         print('*Element, type=S3', file = f0)
-        Ele_begin = 0
+        Ele_begin = [0]
         i = 0
         for plate in plates.values():
             t = plate.mesh['triangles']
             for j in range(len(t)):
-                print('%d, %d ,%d ,%d' % (Ele_begin+j+1, t[j][0]+Node_begin[i]+1, t[j][1]+Node_begin[i]+1, t[j][2]+Node_begin[i]+1), file = f0)
-            Ele_begin += len(plate.mesh['triangles'])
+                print('%d, %d ,%d ,%d' % (Ele_begin[-1]+j+1, t[j][0]+Node_begin[i]+1, t[j][1]+Node_begin[i]+1, t[j][2]+Node_begin[i]+1), file = f0)
+            Ele_begin.append(Ele_begin[-1] + len(t))
             i += 1
 
-        print('*Nset, nset=flange', file = f0)
-        pass
-        print('*Elset, elset=flange', file = f0)
-        pass
+        for key in plates:
+            print('*Elset, elset=' + plates[key].name + ', generate', file = f0)
+            print(Ele_begin, )
         print('*Nset, nset=web', file = f0)
         pass
