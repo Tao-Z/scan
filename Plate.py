@@ -16,37 +16,44 @@ class plate:
         self.segments = []
 
     def add_segment(self, segment):
+        self.segments.append(segment)
         seg = copy.deepcopy(segment)
-        self.segments.append(seg)
         Tf.bystep(seg, self.step)
         seg = [seg[i][0:2] for i in range(len(seg))]
-        self.line.append(Bd.getline_2D(seg[0], seg[-1]))
         Bd.add_segment(self.boundary, seg)
 
     def mesh(self):
-        self.mesh = Mesh.mesh(self)
-        '''
-        self.segments_marker = []
-        for segment in self.segments:
-            for point in segment:
-                for i in range(len(self.mesh['vertices'])):
-                    if point == self.mesh['vertices']:
-                        self.segments_marker.append(i)
-        print(self.segments_marker)
-        '''
-
-    def boundary_to_AutoCAD(self, filename, type='w'):
+        self.mesh = Mesh.mesh(self) 
+        self.segments_num = [[] for i in range(len(self.segments))]
+        for i in range(len(self.segments)):
+            for j in range(len(self.segments[i])):
+                for k in range(len(self.mesh['vertices'])):
+                    if Bd.P2P(self.segments[i][j], self.mesh['vertices'][k]) < 1:
+                        self.segments_num[i].append(k)
+                        break
+        print('segment1')
+        for i in range(len(self.segments)):
+            for j in range(len(self.segments[i])):
+                print(self.segments[i][j])
+                print('')
+        print('segment2')
+        for i in range(len(self.segments_num)):
+            for j in range(len(self.segments_num[i])):
+                print(self.mesh['vertices'][self.segments_num[i][j]])
+                print('')
+        
+    def boundary_to_AutoCAD(self, filename, opt='w'):
         self.get_boundary_3D()
         ver = self.boundary_3D['vertices']
-        with open(filename, type) as f0:
+        with open(filename, opt) as f0:
             for seg in self.boundary_3D['segments']:
                 print('line %f,%f,%f %f,%f,%f ' % (ver[seg[0]][0],ver[seg[0]][1],ver[seg[0]][2],ver[seg[1]][0],ver[seg[1]][1],ver[seg[1]][2]), file = f0)
 
-    def toAutoCAD(self, filename, type='w'):
-        WD.toAutoCAD(self.mesh, filename, type)
+    def toAutoCAD(self, filename, opt='w'):
+        WD.toAutoCAD(self.mesh, filename, opt)
 
-    def toAutoCAD_thick(self, filename, type='w'):
-        WD.toAutoCAD_thick(self.mesh, self.name, filename, type)
+    def toAutoCAD_thick(self, filename, opt='w'):
+        WD.toAutoCAD_thick(self.mesh, self.name, filename, opt)
 
     def get_boundary_3D(self):
         r_step = Tf.reverse(self.step)

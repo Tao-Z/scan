@@ -59,22 +59,22 @@ def intersect_of_plate(plate1, plate2):
     x,y,z = sympy.symbols('x y z')
     func_1 = kp_1[3] * (kp_1[0] - x) + kp_1[4] * (kp_1[1] - y) + kp_1[5] * (kp_1[2] - z)
     line = func_1.subs(z, kp_2[2])
-    segment = end(line, plate2.boundary)
+    segment = getends(line, plate2.boundary)
     for point in segment:
         point.append(kp_2[2])
     r_step = Tf.reverse(plate2.step)
     Tf.bystep(segment, r_step)
     return segment
 
-def end(line, boundary):
+def getends(line, boundary):
     ver = boundary['vertices']
-    end = []
+    ends = []
     for seg in boundary['segments']:
         line_cur = getline_2D(ver[seg[0]], ver[seg[1]])
         c = intersect_of_line(line, line_cur)
-        if (c[0]-ver[seg[0]][0])*(c[0]-ver[seg[1]][0])<=0 and (c[1]-ver[seg[0]][1])*(c[1]-ver[seg[1]][1])<=0 and c not in end:
-            end.append(c)
-    return end
+        if (c[0]-ver[seg[0]][0])*(c[0]-ver[seg[1]][0])<=0 and (c[1]-ver[seg[0]][1])*(c[1]-ver[seg[1]][1])<=0 and c not in ends:
+            ends.append(c)
+    return ends
 
 def getline_2D(point1, point2):
     x, y = sympy.symbols('x y')

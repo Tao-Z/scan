@@ -3,18 +3,18 @@ def points3d(points, filename, dig = 0):
         for point in points:
             print('point %.*f,%.*f,%.*f' % (dig, point[0], dig, point[1], dig, point[2]), file = f0)
 
-def toAutoCAD(tri, filename, type):
+def toAutoCAD(tri, filename, opt):
     v = tri['vertices']
     t = tri['triangles']
     z = tri['z']
-    with open(filename, type) as f0:
+    with open(filename, opt) as f0:
         for i in range(len(t)):
             print('3dface ', end = '', file = f0)
             for j in range(3):
                 print('%f,%f,%f' % (v[t[i][j]][0], v[t[i][j]][1], z[t[i][j]]), file = f0)
             print(' ', file = f0)
 
-def toAutoCAD_thick(tri, p_name, filename, type):
+def toAutoCAD_thick(tri, p_name, filename, opt):
     v = tri['vertices']
     t = tri['triangles']
     z = tri['z']
@@ -24,7 +24,7 @@ def toAutoCAD_thick(tri, p_name, filename, type):
             y_new = [v[i][1] - thick[i] for i in range(len(v))]
         elif p_name == 'BF':
             y_new = [v[i][1] + thick[i] for i in range(len(v))]
-        with open(filename, type) as f0:
+        with open(filename, opt) as f0:
             for i in range(len(t)):
                 print('3dface ', end = '', file = f0)
                 for j in range(3):
@@ -39,7 +39,7 @@ def toAutoCAD_thick(tri, p_name, filename, type):
     if p_name == 'W':
         y_1 = [z[i] - thick[i] / 2 for i in range(len(z))]
         y_2 = [z[i] + thick[i] / 2 for i in range(len(z))]
-        with open(filename, type) as f0:
+        with open(filename, opt) as f0:
             for i in range(len(t)):
                 print('3dface ', end = '', file = f0)
                 for j in range(3):

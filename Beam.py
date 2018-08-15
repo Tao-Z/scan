@@ -23,7 +23,7 @@ class beam:
 
         for segment in self.inter_segment:
             Bd.sub_segment(segment, 10)
-
+        
         self.plates['W'].add_segment(self.inter_segment[0])
         self.plates['TF'].add_segment(self.inter_segment[0])
         self.plates['W'].add_segment(self.inter_segment[1])
@@ -34,22 +34,22 @@ class beam:
             plate.mesh()
 
     def toAutoCAD(self, filename):
-        type = 'w'
+        opt = 'w'
         for plate in self.plates.values():
-            plate.toAutoCAD(filename, type)
-            type = 'a'
+            plate.toAutoCAD(filename, opt)
+            opt = 'a'
 
     def toAutoCAD_thick(self, filename):
-        type = 'w'
+        opt = 'w'
         for plate in self.plates.values():
-            plate.toAutoCAD_thick(filename, type)
-            type = 'a'
+            plate.toAutoCAD_thick(filename, opt)
+            opt = 'a'
 
     def boundary_to_AutoCAD(self, filename):
-        type = 'w'
+        opt = 'w'
         for plate in self.plates.values():
-            plate.boundary_to_AutoCAD(filename, type)
-            type = 'a'
+            plate.boundary_to_AutoCAD(filename, opt)
+            opt = 'a'
 
     def toAbaqus(self, filename, job_name, model_name):
         WD.toAbaqus(self.plates, filename, job_name, model_name)
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     beam1.mesh()
     #beam1.toAutoCAD('data/output/shell_model.txt')
     #beam1.toAutoCAD_thick('data/output/shell_model_thick.txt')
-    beam1.toAbaqus('data/output/Abaqus.inp', 'Job-1', 'Model-1')
+    #beam1.toAbaqus('data/output/Abaqus.inp', 'Job-1', 'Model-1')
     #beam1.boundary_to_AutoCAD('data/output/segment.txt')
     end = time.time()
     print('time =', end - begin)
