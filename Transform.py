@@ -1,5 +1,7 @@
 import math
 import numpy as np
+import sympy
+import copy
 
 #move single point by vector
 def move_s(point, vector):
@@ -140,6 +142,34 @@ def bystep(Points, steps):
         elif step[0] == 'rz':
             rotate_z(Points, step[1])
 
+def bystep_line(line, steps):
+    x0, y0, z0 = sympy.symbols('x0 y0 z0')
+    x, y, z = sympy.symbols('x y z')
+    line_temp = copy.deepcopy(line)
+    for step in steps:       
+        if step[0] == 'm':
+            point = [x, y, z]
+            move_s(point, -step[1])
+            line_temp = line_temp.subs([(x, point[0]), (y, point[1]), (z, point[2])])
+        if step[0] == 'rx':
+            point = [x0, y0, z0]
+            rotate_x_s(point, -step[1])
+            print(point)
+            line_temp = line_temp.subs([(x, point[0]), (y, point[1]), (z, point[2])])
+            line_temp = line_temp.subs([(x0, x), (y0, y), (z0, z)])
+        if step[0] == 'ry':
+            point = [x0, y0, z0]
+            rotate_y_s(point, -step[1])
+            line_temp = line_temp.subs([(x, point[0]), (y, point[1]), (z, point[2])])
+            line_temp = line_temp.subs([(x0, x), (y0, y), (z0, z)])
+        if step[0] == 'rz':
+            point = [x0, y0, z0]
+            rotate_z_s(point, -step[1])
+            line_temp = line_temp.subs([(x, point[0]), (y, point[1]), (z, point[2])])
+            line_temp = line_temp.subs([(x0, x), (y0, y), (z0, z)])
+    return line_temp
+                   
+    
 def tri_step(t, step):
     Points = [[t['vertices'][i][0], t['vertices'][i][1], t['z'][i]] for i in range(len(t['vertices']))]
     bystep(Points, step)

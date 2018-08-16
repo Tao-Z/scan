@@ -31,6 +31,15 @@ class plate:
                     if Bd.P2P(self.segments[i][j], self.mesh['vertices'][k]) < 1:
                         self.segment_nums[i].append(k)
                         break
+        for segment_num in self.segment_nums:
+            for num in segment_num:
+                print(self.mesh['vertices'][num])
+            print('')
+        for segment in self.segments:
+            for point in segment:
+                print(point)
+            print('')
+                
         '''
         print('segment1')
         for i in range(len(self.segments)):
