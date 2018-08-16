@@ -8,46 +8,46 @@ class beam:
     def __init__(self, filename):
         self.points = RD.vertices(filename)
         sorted_points = Lc.locate(self.points)
-        self.plates = {}
+        self.plates = []
         for key in sorted_points:
             points1 = sorted_points[key][0]
             points2 = [[],[]]
             for i in range(len(sorted_points[key])):
                 points2[0].extend(sorted_points[key][i][0])
                 points2[1].extend(sorted_points[key][i][1])
-            self.plates[key] = Plate.plate(key, points1, points2)
+            self.plates.append(Plate.plate(key, points1, points2))
 
         self.inter_segment = []
-        self.inter_segment.append(Bd.intersect_of_plate(self.plates['W'], self.plates['TF']))
-        self.inter_segment.append(Bd.intersect_of_plate(self.plates['W'], self.plates['BF']))
+        self.inter_segment.append(Bd.intersect_of_plate(self.plates[2], self.plates[0]))
+        self.inter_segment.append(Bd.intersect_of_plate(self.plates[2], self.plates[1]))
 
         for segment in self.inter_segment:
             Bd.sub_segment(segment, 10)
-        
-        self.plates['W'].add_segment(self.inter_segment[0])
-        self.plates['TF'].add_segment(self.inter_segment[0])
-        self.plates['W'].add_segment(self.inter_segment[1])
-        self.plates['BF'].add_segment(self.inter_segment[1])
+
+        self.plates[0].add_segment(self.inter_segment[0])
+        self.plates[2].add_segment(self.inter_segment[0])
+        self.plates[1].add_segment(self.inter_segment[1])
+        self.plates[2].add_segment(self.inter_segment[1])
 
     def mesh(self):
-        for plate in self.plates.values():
+        for plate in self.plates:
             plate.mesh()
 
     def toAutoCAD(self, filename):
         opt = 'w'
-        for plate in self.plates.values():
+        for plate in self.plates:
             plate.toAutoCAD(filename, opt)
             opt = 'a'
 
     def toAutoCAD_thick(self, filename):
         opt = 'w'
-        for plate in self.plates.values():
+        for plate in self.plates:
             plate.toAutoCAD_thick(filename, opt)
             opt = 'a'
 
     def boundary_to_AutoCAD(self, filename):
         opt = 'w'
-        for plate in self.plates.values():
+        for plate in self.plates:
             plate.boundary_to_AutoCAD(filename, opt)
             opt = 'a'
 

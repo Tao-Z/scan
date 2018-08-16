@@ -23,25 +23,27 @@ class plate:
         Bd.add_segment(self.boundary, seg)
 
     def mesh(self):
-        self.mesh = Mesh.mesh(self) 
-        self.segments_num = [[] for i in range(len(self.segments))]
+        self.mesh = Mesh.mesh(self)
+        self.segment_nums = [[] for i in range(len(self.segments))]
         for i in range(len(self.segments)):
             for j in range(len(self.segments[i])):
                 for k in range(len(self.mesh['vertices'])):
                     if Bd.P2P(self.segments[i][j], self.mesh['vertices'][k]) < 1:
-                        self.segments_num[i].append(k)
+                        self.segment_nums[i].append(k)
                         break
+        '''
         print('segment1')
         for i in range(len(self.segments)):
             for j in range(len(self.segments[i])):
                 print(self.segments[i][j])
                 print('')
         print('segment2')
-        for i in range(len(self.segments_num)):
-            for j in range(len(self.segments_num[i])):
-                print(self.mesh['vertices'][self.segments_num[i][j]])
+        for i in range(len(self.segment_nums)):
+            for j in range(len(self.segment_nums[i])):
+                print(self.mesh['vertices'][self.segment_nums[i][j]])
                 print('')
-        
+        '''
+
     def boundary_to_AutoCAD(self, filename, opt='w'):
         self.get_boundary_3D()
         ver = self.boundary_3D['vertices']

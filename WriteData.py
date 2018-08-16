@@ -79,12 +79,12 @@ def toAbaqus(plates, filename, job_name, model_name):
                 print('%d, %d ,%d ,%d' % (Ele_begin[-1]+j, t[j][0]+Node_begin[i], t[j][1]+Node_begin[i], t[j][2]+Node_begin[i]), file = f0)
             Ele_begin.append(Ele_begin[-1] + len(t))
             i += 1
-        
+
         i = 0
         for plate in plates.values():
             print('*Elset, elset=%s, generate' % plate.name, file = f0)
             print(Ele_begin[i], Ele_begin[i+1] - 1, 1, file = f0)
-        
+
         print('*Nodal Thickness', file = f0)
         i = 0
         offset = {'TF':' offset=SPOS,', 'BF':' offset=SNEG,'}
@@ -96,17 +96,22 @@ def toAbaqus(plates, filename, job_name, model_name):
             print('*Shell General Section, elset=%s, material=Steel,%s nodal thickness' % (plate.name, offset.get(plate.name, '')), file = f0)
             print('1.,', file = f0)
             i += 1
-        
+
         print('''
 *End Part
-**  
+**
 **
 ** ASSEMBLY
 **
 *Assembly, name=Assembly
-**  
+**
 *Instance, name=PART-1-1, part=PART-1
 *End Instance
-**  
+**
               ''', file = f0)
-        
+
+        for plate in plates:
+            for segment_num in plate.segment_nums:
+                for num in segment_num:
+                    print('*Nset, nset=%s_%d_%d, instance=PART-1-1' % (plate.name, 0, 0), file = f0)
+                    print('%d,' % num + Node_begin[i], file = f0 )
