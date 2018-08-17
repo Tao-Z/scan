@@ -6,12 +6,11 @@ import numpy as np
 import WriteData as WD
 
 class plate:
-    def __init__(self, name, points1, points2):
+    def __init__(self, name, points):
         self.name = name
-        self.points_mesh = copy.deepcopy(points1)
-        self.points_scan = copy.deepcopy(points2)
-        self.keypoint = Bd.plane(self.points_mesh, self.name)
-        self.boundary, self.step = Bd.boundary(self.points_mesh, self.keypoint, 5)
+        self.points = copy.deepcopy(points)
+        self.keypoint = Bd.plane(self.points, self.name)
+        self.boundary, self.step = Bd.boundary(self.points, self.keypoint, 5)
         self.line = []
         self.segments = []
 
@@ -31,6 +30,7 @@ class plate:
                     if Bd.P2P(self.segments[i][j], self.mesh['vertices'][k]) < 1e-5:
                         self.segment_nums[i].append(k)
                         break
+        '''
         print('segment1')
         for segment_num in self.segment_nums:
             for num in segment_num:
@@ -41,6 +41,7 @@ class plate:
             for point in segment:
                 print(point)
             print('')
+        '''
 
 
     def boundary_to_AutoCAD(self, filename, opt='w'):

@@ -46,7 +46,7 @@ def locate(Points):
                 TF[1].append(point)
             elif point[1] < midy and point[4] > m * abs(point[5]):
                 BF[1].append(point)
-    Points_located = {'TF':[TF], 'BF':[BF], 'W':[W, SF]}
+    Points_located = {'TF':TF, 'BF':BF, 'W':W}
     return Points_located
 
 if __name__ == '__main__':

@@ -178,8 +178,8 @@ def between(P1, P2, P3):
     return (P1[0] - P2[0]) * (P1[0] - P3[0]) <= 0 and (P1[1] - P2[1]) * (P1[1] - P3[1]) <= 0
 
 def add_segment(boundary, new_seg):
-    vertices = [boundary['vertices'][i] for i in range(len(boundary['vertices']))]
-    segments = [boundary['segments'][i] for i in range(len(boundary['segments']))]
+    vertices = boundary['vertices']
+    segments = boundary['segments']
     n = len(vertices)
     vertices.extend(new_seg)
     for i in range(len(new_seg)):
@@ -220,9 +220,6 @@ def add_segment(boundary, new_seg):
                 for j in range(2):
                     if segment[j] > i:
                         segment[j] = segment[j] - 1
-
-    boundary['vertices'] = vertices
-    boundary['segments'] = segments
 
 
 if __name__ == '__main__':

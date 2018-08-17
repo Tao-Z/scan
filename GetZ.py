@@ -104,10 +104,10 @@ def getz(t, face1, face2, r_min, num, p_name, lines):
         #get z
         if p_name == 'W':
             t['z'][i] = (z1[i] + z2[i]) / 2
-            '''
+            
             if abs(z1 [i]- z2[i]) > 20:
                 t['z'][i] = 0
-            '''
+            
         else:
             t['z'][i] = z1[i]
 

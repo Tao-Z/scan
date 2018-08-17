@@ -55,16 +55,16 @@ def toAbaqus(beam, filename, job_name, model_name):
     plates = beam.plates
     with open(filename, 'w') as f0:
         print('*Heading', file = f0)
-        print('** Job name:'+job_name+'Model name:'+model_name, file = f0)
+        print('** Job name: %s Model name: %s' % (job_name, model_name), file = f0)
         print('*Preprint, echo=NO, model=NO, history=NO, contact=NO', file = f0)
         print('**', file = f0)
         print('** PARTS', file = f0)
         print('**', file = f0)
-        print('*Part, name=Part-1', file = f0)
+        print('*Part, name=PART-1', file = f0)
 
         print('*Node', file = f0)
         Node_begin = [1]
-        for plate in plates.values():
+        for plate in plates:
             v = plate.mesh['vertices']
             z = plate.mesh['z']
             for i in range(len(v)):
@@ -84,15 +84,16 @@ def toAbaqus(beam, filename, job_name, model_name):
         i = 0
         for plate in plates:
             print('*Elset, elset=%s, generate' % plate.name, file = f0)
-            print(Ele_begin[i], Ele_begin[i+1] - 1, 1, file = f0)
-
-        print('*Nodal Thickness', file = f0)
+            print('%d, %d, %d' % (Ele_begin[i], Ele_begin[i+1] - 1, 1), file = f0)
+            i += 1
+   
         i = 0
         offset = {'TF':' offset=SPOS,', 'BF':' offset=SNEG,'}
         for plate in plates:
+            print('*Nodal Thickness', file = f0)
             v = plate.mesh['vertices']
             for j in range(len(v)):
-                print(Node_begin[i] + j, plate.mesh['thick1'][j], file = f0)
+                print('%d, %f' % (Node_begin[i] + j, plate.mesh['thick1'][j]), file = f0)
             print('** Section: Sect_%s' % plate.name, file = f0)
             print('*Shell General Section, elset=%s, material=Steel,%s nodal thickness' % (plate.name, offset.get(plate.name, '')), file = f0)
             print('1.,', file = f0)
@@ -111,14 +112,28 @@ def toAbaqus(beam, filename, job_name, model_name):
 
         for i in range(len(plates)):
             for j in range(len(plates[i].segment_nums)):
-                for k in plates[i].segment_nums[j]:
+                for k in range(len(plates[i].segment_nums[j])):
                     print('*Nset, nset=%s_%d_%d, instance=PART-1-1' % (plates[i].name, j, k), file = f0)
-                    print('%d,' % Node_begin[i] + plate.segment_nums[j][k], file = f0 )
+                    print('%d,' % (Node_begin[i] + plates[i].segment_nums[j][k]), file = f0 )
                     print('*Surface, type=NODE, name=%s_%d_%d_CNS_' % (plates[i].name, j, k), file = f0)
                     print('%s_%d_%d, 1.' % (plates[i].name, j, k), file = f0)
         ins_markers = beam.inter_segment_markers
         for i in range(len(ins_markers)):
-            for j in range(len(plates[ins_markers[i][0]])):
+            p_num_0 = ins_markers[i][0][0]
+            seg_num_0 = ins_markers[i][0][1]
+            p_num_1 = ins_markers[i][1][0]
+            seg_num_1 = ins_markers[i][1][1]
+            for j in range(len(plates[p_num_0].segment_nums[seg_num_0])):
                 print('** Constraint: Constraint-%d-%d' % (i, j), file = f0)
-                print('*Tie, name=Constraint-%d-%d, adjust=yes, position tolerance=1.' % (i, j), file = f0)
-                #print('%s_%d_%d_CNS_, %s_%d_%d_CNS_' % (plates[ins_markers[i][0]].name, ))
+                print('*Tie, name=Constraint-%d-%d, adjust=yes, position tolerance=0.001' % (i, j), file = f0)
+                print('%s_%d_%d_CNS_,' % (plates[p_num_0].name, seg_num_0, j), end = '', file = f0)
+                print(' %s_%d_%d_CNS_' % (plates[p_num_1].name, seg_num_1, j), file = f0)
+        
+        print('*End Assembly', file = f0)
+        print('**', file = f0)
+        print('** MATERIALS', file = f0)
+        print('**', file = f0)
+        print('*Material, name=Steel', file = f0)
+        print('*Elastic', file = f0)
+        print('200000., 0.3', file = f0)
+        print('**', file = f0)

@@ -9,7 +9,7 @@ import Triplot as Tplt
 import time
 
 def mesh(plate):
-    points = copy.deepcopy(plate.points_scan)
+    points = copy.deepcopy(plate.points)
     boundary = plate.boundary
     Tf.bystep(points[0], plate.step)
     Tf.bystep(points[1], plate.step)
