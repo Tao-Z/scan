@@ -28,30 +28,20 @@ class plate:
         for i in range(len(self.segments)):
             for j in range(len(self.segments[i])):
                 for k in range(len(self.mesh['vertices'])):
-                    if Bd.P2P(self.segments[i][j], self.mesh['vertices'][k]) < 1:
+                    if Bd.P2P(self.segments[i][j], self.mesh['vertices'][k]) < 1e-5:
                         self.segment_nums[i].append(k)
                         break
+        print('segment1')
         for segment_num in self.segment_nums:
             for num in segment_num:
                 print(self.mesh['vertices'][num])
             print('')
+        print('segment2')
         for segment in self.segments:
             for point in segment:
                 print(point)
             print('')
-                
-        '''
-        print('segment1')
-        for i in range(len(self.segments)):
-            for j in range(len(self.segments[i])):
-                print(self.segments[i][j])
-                print('')
-        print('segment2')
-        for i in range(len(self.segment_nums)):
-            for j in range(len(self.segment_nums[i])):
-                print(self.mesh['vertices'][self.segment_nums[i][j]])
-                print('')
-        '''
+
 
     def boundary_to_AutoCAD(self, filename, opt='w'):
         self.get_boundary_3D()

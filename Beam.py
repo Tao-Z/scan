@@ -16,8 +16,8 @@ class beam:
             for i in range(len(sorted_points[key])):
                 points2[0].extend(sorted_points[key][i][0])
                 points2[1].extend(sorted_points[key][i][1])
-            self.plates.append(Plate.plate(key, points1, points2))  
-        
+            self.plates.append(Plate.plate(key, points1, points2))
+
         self.intersect_matrix = np.matrix([[0,0,1],
                                            [0,0,1],
                                            [1,1,0]])
@@ -33,8 +33,8 @@ class beam:
                     self.plates[i].add_segment(segment)
                     self.plates[j].add_segment(segment)
                     self.inter_segment_markers.append([[i, len(self.plates[i].segments)-1], [j, len(self.plates[j].segments)-1]])
-        
-        
+
+
     def mesh(self):
         for plate in self.plates:
             plate.mesh()
@@ -68,7 +68,7 @@ if __name__ == '__main__':
         print(plate.name)
         print(plate.line)
         print('')
-    #beam1.mesh()
+    beam1.mesh()
     #beam1.toAutoCAD('data/output/shell_model.txt')
     #beam1.toAutoCAD_thick('data/output/shell_model_thick.txt')
     #beam1.toAbaqus('data/output/Abaqus.inp', 'Job-1', 'Model-1')

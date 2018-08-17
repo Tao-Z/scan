@@ -102,16 +102,20 @@ def getz(t, face1, face2, r_min, num, p_name, lines):
         vector2[i] = unify(vector2[i] / t['b1'][i])
 
         #get z
-        x, y = sympy.symbols('x y')
-        if any(abs(line.subs([(x, vertices[i][0]), (y, vertices[i][1])])) < 1 for line in lines):
-            t['z'][i] = 0
+        if p_name == 'W':
+            t['z'][i] = (z1[i] + z2[i]) / 2
+            '''
+            if abs(z1 [i]- z2[i]) > 20:
+                t['z'][i] = 0
+            '''
         else:
-            if p_name == 'W':
-                t['z'][i] = (z1[i] + z2[i]) / 2
-                if abs(z1 [i]- z2[i]) > 20:
-                    t['z'][i] = 0
-            else:
-                t['z'][i] = z1[i]
+            t['z'][i] = z1[i]
+
+        x, y, z = sympy.symbols('x y z')
+        for line in lines:
+            if abs(line.subs([(x, vertices[i][0]), (y, vertices[i][1])])) < 1e-5:
+                t['z'][i] = 0
+                break
 
     #get thick
     thick0 = abs(np.array(z1) - np.array(z2))
