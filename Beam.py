@@ -12,7 +12,7 @@ class beam:
         self.plates = []
         for key in sorted_points:
             self.plates.append(Plate.plate(key, sorted_points[key]))
-
+        
         self.intersect_matrix = np.matrix([[0,0,1],
                                            [0,0,1],
                                            [1,1,0]])
@@ -28,7 +28,6 @@ class beam:
                     self.plates[i].add_segment(segment)
                     self.plates[j].add_segment(segment)
                     self.inter_segment_markers.append([[i, len(self.plates[i].segments)-1], [j, len(self.plates[j].segments)-1]])
-
 
     def mesh(self):
         for plate in self.plates:
@@ -59,10 +58,10 @@ if __name__ == '__main__':
     import time
     begin = time.time()
     beam1 = beam('data/input/sh_0411.obj')
-    beam1.mesh()
+    #beam1.mesh()
     #beam1.toAutoCAD('data/output/shell_model.txt')
     #beam1.toAutoCAD_thick('data/output/shell_model_thick.txt')
-    beam1.toAbaqus('data/output/Abaqus.inp', 'Job-1', 'Model-1')
-    #beam1.boundary_to_AutoCAD('data/output/segment.txt')
+    #beam1.toAbaqus('data/output/Abaqus.inp', 'Job-1', 'Model-1')
+    beam1.boundary_to_AutoCAD('data/output/segment.txt')
     end = time.time()
     print('time =', end - begin)

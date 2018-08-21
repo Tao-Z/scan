@@ -14,15 +14,25 @@ def P2P(point1, point2):
 def P2V(point, begin, end):
     vec1 = np.array([point[0], point[1]]) - np.array(begin)
     vec2 = np.array(end) - np.array(begin)
-    lenth2 = math.sqrt(np.sum(np.square(vec2)))
+    lenth2 = len_v(vec2)
     d = (vec1[0] * vec2[1] - vec1[1] * vec2[0]) / lenth2
     return d
 
 def len_v(vector):
-    return math.sqrt(sum((n**2) for n in vector))
+    vector = np.array(vector)
+    return np.sqrt(vector.dot(vector))
 
 def unify(vector):
     return np.array(vector) / len_v(vector)
+
+def theta(P1, P2, P3):
+    vec1 = np.array(P1) - np.array(P2)
+    vec2 = np.array(P3) - np.array(P2)
+    if len_v(vec1) == 0 or len_v(vec2) == 0:
+        return 0
+    m = vec1.dot(vec2) / len_v(vec1) / len_v(vec2)
+    m = round(m, 5)
+    return np.arccos(m)
 
 def plane_face(points):
     k = 1
@@ -74,7 +84,7 @@ def intersect_of_plate(plate1, plate2):
 def getends(line, boundary):
     ver = boundary['vertices']
     ends = []
-    for seg in boundary['segments']:
+    for seg in boundary['original_segments']:
         line_cur = getline_2D(ver[seg[0]], ver[seg[1]])
         c = intersect_of_line(line, line_cur)
         if (c[0]-ver[seg[0]][0])*(c[0]-ver[seg[1]][0])<=0 and (c[1]-ver[seg[0]][1])*(c[1]-ver[seg[1]][1])<=0 and c not in ends:
@@ -89,7 +99,7 @@ def getline_2D(point1, point2):
 def intersect_of_line(line1, line2):
     x, y = sympy.symbols('x y')
     result = sympy.solve([line1, line2], [x, y])
-    return [result[x], result[y]]
+    return [float(result[x]), float(result[y])]
 
 #add points into link to complete boundary
 def add(link, Points, error, cur):
@@ -162,8 +172,9 @@ def boundary(points_couple, keypoint, error): #get the boundary based on face1
 
     segments = [[i, i+1] for i in range(link.length-1)]
     segments.append([link.length - 1, 0])
-
-    boundary = dict(vertices = vertices, segments = segments)
+    original_vertices = copy.deepcopy(vertices)
+    original_segments = copy.deepcopy(segments)
+    boundary = dict(vertices = vertices, segments = segments, original_vertices = original_vertices, original_segments = original_segments)
     return boundary, step
 
 def sub_segment(segment, n):
@@ -174,9 +185,6 @@ def sub_segment(segment, n):
         point = [segment[0][0] + i*dx, segment[0][1] + i*dy, segment[0][2] + i*dz]
         segment.insert(i, point)
 
-def between(P1, P2, P3):
-    return (P1[0] - P2[0]) * (P1[0] - P3[0]) <= 0 and (P1[1] - P2[1]) * (P1[1] - P3[1]) <= 0
-
 def add_segment(boundary, new_seg):
     vertices = boundary['vertices']
     segments = boundary['segments']
@@ -186,7 +194,9 @@ def add_segment(boundary, new_seg):
         j = 0
         while j < len(segments):
             p2v = P2V(new_seg[i], vertices[segments[j][0]], vertices[segments[j][1]])
-            if p2v > -0.3:
+            theta_1 = theta(new_seg[i], vertices[segments[j][0]], vertices[segments[j][1]])
+            theta_2 = theta(new_seg[i], vertices[segments[j][1]], vertices[segments[j][0]])
+            if p2v > -0.001 and theta_1 < 11/12 * math.pi and theta_2 < 11/12 * math.pi:
                 if [n+i, segments[j][0]] not in segments:
                     segments.insert(j, [segments[j][0], n+i])
                     j += 1
@@ -210,16 +220,9 @@ def add_segment(boundary, new_seg):
         if [n+i, n+i+1] not in segments and [n+i+1, n+i] not in segments:
             segments.append([n+i, n+i+1])
 
-    i = 0
-    while i < len(vertices):
-        if any(i in segment for segment in segments):
-            i += 1
-        else:
-            vertices.pop(i)
-            for segment in segments:
-                for j in range(2):
-                    if segment[j] > i:
-                        segment[j] = segment[j] - 1
+    for seg in boundary['original_segments']:
+        if seg not in segments:
+            segments.append(seg)
 
 
 if __name__ == '__main__':
