@@ -25,7 +25,7 @@ def len_v(vector):
 def unify(vector):
     return np.array(vector) / len_v(vector)
 
-def theta(P1, P2, P3):
+def angle(P1, P2, P3):
     vec1 = np.array(P1) - np.array(P2)
     vec2 = np.array(P3) - np.array(P2)
     if len_v(vec1) == 0 or len_v(vec2) == 0:
@@ -157,19 +157,29 @@ def boundary(points_couple, keypoint, error): #get the boundary based on face1
     link = Ll.Linkedlist()
     link.append(corner[0])
     for point in corner[1:]:
-        if P2P(point, link.tail.data) > error:
+        if point != link.tail.data:
             link.append(point)
 
     points.sort()
     cur = link.head
     add(link, points, error, cur)
-
+    
+    cur = link.head
+    while True:
+        if (angle(cur.pre.data, cur.data, cur.next.data) > 3/4 * math.pi and P2V(cur.data, cur.pre.data, cur.next.data) < error):
+            cur = cur.next
+            link.delete(cur.pre)
+        else:
+            cur = cur.next
+        if cur == link.head:
+            break
+    
     vertices = []
     cur = link.head
     for i in range(link.length):
         vertices.append(cur.data)
-        cur = cur.next
-
+        cur = cur.next   
+        
     segments = [[i, i+1] for i in range(link.length-1)]
     segments.append([link.length - 1, 0])
     original_vertices = copy.deepcopy(vertices)
@@ -194,8 +204,8 @@ def add_segment(boundary, new_seg):
         j = 0
         while j < len(segments):
             p2v = P2V(new_seg[i], vertices[segments[j][0]], vertices[segments[j][1]])
-            theta_1 = theta(new_seg[i], vertices[segments[j][0]], vertices[segments[j][1]])
-            theta_2 = theta(new_seg[i], vertices[segments[j][1]], vertices[segments[j][0]])
+            theta_1 = angle(new_seg[i], vertices[segments[j][0]], vertices[segments[j][1]])
+            theta_2 = angle(new_seg[i], vertices[segments[j][1]], vertices[segments[j][0]])
             if p2v > -0.001 and theta_1 < 11/12 * math.pi and theta_2 < 11/12 * math.pi:
                 if [n+i, segments[j][0]] not in segments:
                     segments.insert(j, [segments[j][0], n+i])
@@ -212,17 +222,15 @@ def add_segment(boundary, new_seg):
                 segments.pop(j)
             else:
                 j += 1
-    if [n, n+len(new_seg)-1] in segments:
-        segments.remove([n, n+len(new_seg)-1])
-    if [n+len(new_seg)-1, n] in segments:
-        segments.remove([n+len(new_seg)-1, n])
+
     for i in range(len(new_seg) - 1):
         if [n+i, n+i+1] not in segments and [n+i+1, n+i] not in segments:
             segments.append([n+i, n+i+1])
-
+    
     for seg in boundary['original_segments']:
         if seg not in segments:
-            segments.append(seg)
+            if all(angle(p, vertices[seg[0]], vertices[seg[1]]) > 1/180 * math.pi for p in new_seg):
+                segments.append(seg)
 
 
 if __name__ == '__main__':

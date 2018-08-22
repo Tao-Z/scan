@@ -25,8 +25,8 @@ class beam:
                     segment = Bd.intersect_of_plate(self.plates[j], self.plates[i])
                     Bd.sub_segment(segment, n)
                     self.inter_segments.append(segment)
-                    self.plates[i].add_segment(segment)
-                    self.plates[j].add_segment(segment)
+                    #self.plates[i].add_segment(segment)
+                    #self.plates[j].add_segment(segment)
                     self.inter_segment_markers.append([[i, len(self.plates[i].segments)-1], [j, len(self.plates[j].segments)-1]])
 
     def mesh(self):
