@@ -171,8 +171,8 @@ def boundary(points_couple, keypoint, error): #get the boundary based on face1
             link.delete(cur.pre)
         else:
             cur = cur.next
-        if cur == link.head:
-            break
+            if cur == link.head:
+                break
     
     vertices = []
     cur = link.head
