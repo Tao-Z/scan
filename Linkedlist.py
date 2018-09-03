@@ -50,6 +50,13 @@ class Linkedlist:
         cur.pre.next = cur.next
         cur.next.pre = cur.pre
         self.length -= 1
+        
+    def get_index(self, cur):
+        i = 0
+        while cur != self.head:
+            cur = cur.pre
+            i += 1
+        return i
 
 if __name__ == '__main__':
     s = Linkedlist()

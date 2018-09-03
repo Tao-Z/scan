@@ -26,11 +26,11 @@ def mesh(plate):
     #GT.thick(t, face1, face2, 2, 20)
 
     #parameters of refinement
-    k1 = 15
+    k1 = 5
     k2 = 4
     d2 = 40
-    k3 = 1.5
-    d3 = 5
+    k3 = 1.3
+    d3 = 3
 
     #refine1
     for i in range(1,10):
