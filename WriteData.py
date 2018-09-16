@@ -1,9 +1,9 @@
-def points3d(points, filename, dig = 0):
+def toAutoCAD_points3d(points, filename, dig = 3):
     with open(filename, 'w') as f0:
         for point in points:
             print('point %.*f,%.*f,%.*f' % (dig, point[0], dig, point[1], dig, point[2]), file = f0)
 
-def toAutoCAD(tri, filename, opt):
+def toAutoCAD_triangle(tri, filename, opt):
     v = tri['vertices']
     t = tri['triangles']
     z = tri['z']
@@ -51,6 +51,29 @@ def toAutoCAD_thick(tri, p_name, filename, opt):
                     print('%f,%f,%f' % (v[t[i][j]][0], v[t[i][j]][1], y_2[t[i][j]]), file = f0)
                 print(' ', file = f0)
 
+def topwn(points, normals, filename):
+    with open(filename, 'w') as f0:
+        for i in range(len(points)):
+            print('%f %f %f' % (points[i][0], points[i][1], points[i][2]), end = ' ', file = f0)
+            print('%f %f %f' % (normals[i][0], normals[i][1], normals[i][2]), file = f0)
+            
+def tooff(points, faces, filename):
+    with open(filename, 'w') as f0:
+        print('OFF', file = f0)
+        print(len(points), len(faces), 0, file = f0)
+        for point in points:
+            print('%f %f %f' % (point[0], point[1], point[2]), file = f0)
+        for face in faces:
+            print('3  %d %d %d' % (face[0], face[1], face[2]), file = f0)
+
+            
+def toobj(points, normals, filename):
+    with open(filename, 'w') as f0:
+        for point in points:
+            print('v %f %f %f' % (point[0], point[1], point[2]), file = f0)
+        for normal in normals:
+            print('vn %f %f %f' % (normal[0], normal[1], normal[2]), file = f0)
+            
 def toAbaqus(beam, filename, job_name, model_name):
     plates = beam.plates
     with open(filename, 'w') as f0:

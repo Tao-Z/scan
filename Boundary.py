@@ -239,8 +239,10 @@ if __name__ == '__main__':
     import Locate as Lc
     import time
 
-    Point = RD.vertices('data/input/sh_0411.obj')
-    P = Lc.locate(Point)
+    vertices = RD.obj_vertices('data/input/sh_0411.obj')
+    normals = RD.obj_normals('data/input/sh_0411.obj')
+    Points = [vertices[i] + normals[i] for i in range(len(vertices))]
+    P = Lc.locate(Points)
     face1 = [point for point in P['DTF1']]
     face2 = [point for point in P['UTF']]
 

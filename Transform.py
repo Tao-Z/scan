@@ -180,11 +180,13 @@ if __name__ == '__main__':
     import ReadData as RD
     import time
     start = time.time()
-    Points = RD.vertices('data/input/sh_0411.obj')
+    points = RD.obj_vertices('data/input/sh_0411.obj')
+    normals = RD.obj_normals('data/input/sh_0411.obj')
+    pwns = [points[i] + normals[i] for i in range(len(points))]
     #get coordinates of three picked points
     pick = [[145, -196, -104], [145, -199, 82], [-158, -196, -104]]
-    newcoord(Points, pick)
+    newcoord(pwns, pick)
     for i in range(10):
-        print(Points[i])
+        print(pwns[i])
     end = time.time()
     print('Time=', end - start, 's')

@@ -53,18 +53,20 @@ if __name__ == '__main__':
     import ReadData as RD
     import WriteData as WD
     import time
-    Point = RD.vertices('data/input/sh f.obj')
+    points = RD.obj_vertices('data/input/sh f.obj')
+    normals = RD.obj_normals('data/input/sh f.obj')
+    pwns = [points[i] + normals[i] for i in range(len(points))]
     start = time.time()
-    P = locate(Point)
+    P = locate(pwns)
     end = time.time()
     #write point into seperate files accrding to their position
-    WD.points3d(P['TF'][0], 'data/output/1_upside_of_top_flange.txt', 2)
-    WD.points3d(P['TF'][1], 'data/output/2_underside_of_top_flange.txt', 2)
-    WD.points3d(P['W'][0], 'data/output/3_leftside_of_web.txt', 2)
-    WD.points3d(P['W'][1], 'data/output/4_rightside_of_web.txt', 2)
-    WD.points3d(P['BF'][0], 'data/output/5_upside_of_bottom_flange.txt', 2)
-    WD.points3d(P['BF'][1], 'data/output/6_underside_of_bottom_flange.txt', 2)
+    WD.toAutoCAD_points3d(P['TF'][0], 'data/output/1_upside_of_top_flange.txt', 2)
+    WD.toAutoCAD_points3d(P['TF'][1], 'data/output/2_underside_of_top_flange.txt', 2)
+    WD.toAutoCAD_points3d(P['W'][0], 'data/output/3_leftside_of_web.txt', 2)
+    WD.toAutoCAD_points3d(P['W'][1], 'data/output/4_rightside_of_web.txt', 2)
+    WD.toAutoCAD_points3d(P['BF'][0], 'data/output/5_upside_of_bottom_flange.txt', 2)
+    WD.toAutoCAD_points3d(P['BF'][1], 'data/output/6_underside_of_bottom_flange.txt', 2)
 
     #the whole model
-    WD.points3d(Point, 'data/output/whole.txt', 2)
+    WD.toAutoCAD_points3d(points, 'data/output/whole.txt', 2)
     print('Time=', end - start, 's')

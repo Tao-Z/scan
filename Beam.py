@@ -7,11 +7,13 @@ import numpy as np
 
 class beam:
     def __init__(self, filename):
-        self.points = RD.vertices(filename)
-        sorted_points = Lc.locate(self.points)
+        points = RD.obj_vertices(filename)
+        normals = RD.obj_normals(filename)
+        self.pwns = [points[i] + normals[i] for i in range(len(points))]
+        sorted_pwns = Lc.locate(self.pwns)
         self.plates = []
-        for key in sorted_points:
-            self.plates.append(Plate.plate(key, sorted_points[key]))
+        for key in sorted_pwns:
+            self.plates.append(Plate.plate(key, sorted_pwns[key]))
         
         self.intersect_matrix = np.matrix([[0,0,1],
                                            [0,0,1],

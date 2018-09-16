@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import copy
 import Transform as Tf
 import GetZ as GZ
-import GetThick as GT
+#import GetThick as GT
 import Refine as Rf
 import Triplot as Tplt
 import time
@@ -85,23 +85,3 @@ def mesh(plate):
     Tf.tri_step(t, r_step)
     return t
 
-
-if __name__ == '__main__':
-    import time
-    import ReadData as RD
-    import Locate as Lc
-    Point = RD.vertices('data/input/sh_0411.obj')
-    P = Lc.locate(Point)
-    face1 = [point for point in P['DTF2']]
-    face2 = [point for point in P['UTF']]
-    start = time.time()
-    t = mesh(face1, face2, area)
-    end = time.time()
-    print('Time=', end - start)
-    fig1 = plt.figure()
-    ax = fig1.add_subplot(111, aspect='equal')
-    Tplt.plot(ax, **t)
-    #for point in t['mid_point']:
-    #    ax.scatter(point[0], point[1], color = 'red', marker = '.')
-    fig1.subplots_adjust(top = 0.95, bottom = 0.05)
-    plt.show()

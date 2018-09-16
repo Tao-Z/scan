@@ -52,7 +52,7 @@ class plate:
                 print('line %f,%f,%f %f,%f,%f ' % (ver[seg[0]][0],ver[seg[0]][1],ver[seg[0]][2],ver[seg[1]][0],ver[seg[1]][1],ver[seg[1]][2]), file = f0)
 
     def toAutoCAD(self, filename, opt='w'):
-        WD.toAutoCAD(self.mesh, filename, opt)
+        WD.toAutoCAD_triangle(self.mesh, filename, opt)
 
     def toAutoCAD_thick(self, filename, opt='w'):
         WD.toAutoCAD_thick(self.mesh, self.name, filename, opt)
